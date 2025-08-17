@@ -1,0 +1,102 @@
+[
+	{
+		"id": "acc-necklace-kundan-gold",
+		"name": "Kundan Necklace Set - Antique Gold",
+		"type": "necklace",
+		"price": 2599,
+		"imageUrl": "https://placehold.co/400x400/f2eadf/1a1a1a?text=Kundan+Gold",
+		"colors": ["gold", "maroon", "green"],
+		"styles": ["traditional", "festive", "wedding"],
+		"inStock": true
+	},
+	{
+		"id": "acc-earing-jhumka-pearl",
+		"name": "Pearl Jhumka Earrings",
+		"type": "earrings",
+		"price": 899,
+		"imageUrl": "https://placehold.co/400x400/f8fbff/1a1a1a?text=Pearl+Jhumka",
+		"colors": ["white", "gold"],
+		"styles": ["traditional", "designer", "minimal"],
+		"inStock": true
+	},
+	{
+		"id": "acc-bangle-meenakari-red",
+		"name": "Meenakari Bangle Set - Ruby Red",
+		"type": "bangles",
+		"price": 1199,
+		"imageUrl": "https://placehold.co/400x400/f9e6e6/1a1a1a?text=Meenakari+Red",
+		"colors": ["red", "gold"],
+		"styles": ["traditional", "festive"],
+		"inStock": true
+	},
+	{
+		"id": "acc-bracelet-minimal-silver",
+		"name": "Minimal Bracelet - Silver Tone",
+		"type": "bracelet",
+		"price": 499,
+		"imageUrl": "https://placehold.co/400x400/efefef/1a1a1a?text=Bracelet+Silver",
+		"colors": ["silver"],
+		"styles": ["minimal", "designer", "party"],
+		"inStock": true
+	},
+	{
+		"id": "acc-heels-stiletto-black",
+		"name": "Stiletto Heels - Noir",
+		"type": "heels",
+		"price": 1799,
+		"imageUrl": "https://placehold.co/400x400/111111/ffffff?text=Heels+Noir",
+		"colors": ["black", "silver"],
+		"styles": ["party", "designer"],
+		"inStock": true
+	},
+	{
+		"id": "acc-sandals-ethnic-tan",
+		"name": "Ethnic Sandals - Tan",
+		"type": "sandals",
+		"price": 999,
+		"imageUrl": "https://placehold.co/400x400/f2eadf/1a1a1a?text=Ethnic+Sandals",
+		"colors": ["beige", "tan", "gold"],
+		"styles": ["traditional", "casual"],
+		"inStock": true
+	},
+	{
+		"id": "acc-clutch-embellished-gold",
+		"name": "Embellished Clutch - Gold",
+		"type": "clutch",
+		"price": 1399,
+		"imageUrl": "https://placehold.co/400x400/f2eadf/1a1a1a?text=Clutch+Gold",
+		"colors": ["gold", "beige"],
+		"styles": ["festive", "wedding", "party"],
+		"inStock": true
+	},
+	{
+		"id": "acc-necklace-oxidized-silver",
+		"name": "Oxidized Silver Necklace",
+		"type": "necklace",
+		"price": 1299,
+		"imageUrl": "https://placehold.co/400x400/efefef/1a1a1a?text=Oxidized+Necklace",
+		"colors": ["silver", "black"],
+		"styles": ["handloom", "casual", "designer"],
+		"inStock": true
+	},
+	{
+		"id": "acc-earing-stud-emerald",
+		"name": "Emerald Stud Earrings",
+		"type": "earrings",
+		"price": 699,
+		"imageUrl": "https://placehold.co/400x400/e8f4ea/1a1a1a?text=Emerald+Studs",
+		"colors": ["green", "gold"],
+		"styles": ["festive", "traditional", "minimal"],
+		"inStock": true
+	},
+	{
+		"id": "acc-bangle-pearl-white",
+		"name": "Pearl Bangle Set - White",
+		"type": "bangles",
+		"price": 1099,
+		"imageUrl": "https://placehold.co/400x400/f8fbff/1a1a1a?text=Pearl+Bangles",
+		"colors": ["white", "gold"],
+		"styles": ["designer", "wedding", "party"],
+		"inStock": true
+	}
+]
