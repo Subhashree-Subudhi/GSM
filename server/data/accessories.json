@@ -4,7 +4,7 @@
 		"name": "Kundan Necklace Set - Antique Gold",
 		"type": "necklace",
 		"price": 2599,
-		"imageUrl": "https://placehold.co/400x400/f2eadf/1a1a1a?text=Kundan+Gold",
+		"imageUrl": "https://source.unsplash.com/400x400/?kundan,necklace,indian",
 		"colors": ["gold", "maroon", "green"],
 		"styles": ["traditional", "festive", "wedding"],
 		"inStock": true
@@ -14,7 +14,7 @@
 		"name": "Pearl Jhumka Earrings",
 		"type": "earrings",
 		"price": 899,
-		"imageUrl": "https://placehold.co/400x400/f8fbff/1a1a1a?text=Pearl+Jhumka",
+		"imageUrl": "https://source.unsplash.com/400x400/?jhumka,earrings,pearl",
 		"colors": ["white", "gold"],
 		"styles": ["traditional", "designer", "minimal"],
 		"inStock": true
@@ -24,7 +24,7 @@
 		"name": "Meenakari Bangle Set - Ruby Red",
 		"type": "bangles",
 		"price": 1199,
-		"imageUrl": "https://placehold.co/400x400/f9e6e6/1a1a1a?text=Meenakari+Red",
+		"imageUrl": "https://source.unsplash.com/400x400/?meenakari,bangles,red",
 		"colors": ["red", "gold"],
 		"styles": ["traditional", "festive"],
 		"inStock": true
@@ -34,7 +34,7 @@
 		"name": "Minimal Bracelet - Silver Tone",
 		"type": "bracelet",
 		"price": 499,
-		"imageUrl": "https://placehold.co/400x400/efefef/1a1a1a?text=Bracelet+Silver",
+		"imageUrl": "https://source.unsplash.com/400x400/?bracelet,silver,minimal",
 		"colors": ["silver"],
 		"styles": ["minimal", "designer", "party"],
 		"inStock": true
@@ -44,7 +44,7 @@
 		"name": "Stiletto Heels - Noir",
 		"type": "heels",
 		"price": 1799,
-		"imageUrl": "https://placehold.co/400x400/111111/ffffff?text=Heels+Noir",
+		"imageUrl": "https://source.unsplash.com/400x400/?stiletto,heels,black",
 		"colors": ["black", "silver"],
 		"styles": ["party", "designer"],
 		"inStock": true
@@ -54,7 +54,7 @@
 		"name": "Ethnic Sandals - Tan",
 		"type": "sandals",
 		"price": 999,
-		"imageUrl": "https://placehold.co/400x400/f2eadf/1a1a1a?text=Ethnic+Sandals",
+		"imageUrl": "https://source.unsplash.com/400x400/?kolhapuri,sandals,tan",
 		"colors": ["beige", "tan", "gold"],
 		"styles": ["traditional", "casual"],
 		"inStock": true
@@ -64,7 +64,7 @@
 		"name": "Embellished Clutch - Gold",
 		"type": "clutch",
 		"price": 1399,
-		"imageUrl": "https://placehold.co/400x400/f2eadf/1a1a1a?text=Clutch+Gold",
+		"imageUrl": "https://source.unsplash.com/400x400/?clutch,bag,gold",
 		"colors": ["gold", "beige"],
 		"styles": ["festive", "wedding", "party"],
 		"inStock": true
@@ -74,7 +74,7 @@
 		"name": "Oxidized Silver Necklace",
 		"type": "necklace",
 		"price": 1299,
-		"imageUrl": "https://placehold.co/400x400/efefef/1a1a1a?text=Oxidized+Necklace",
+		"imageUrl": "https://source.unsplash.com/400x400/?oxidized,silver,necklace",
 		"colors": ["silver", "black"],
 		"styles": ["handloom", "casual", "designer"],
 		"inStock": true
@@ -84,7 +84,7 @@
 		"name": "Emerald Stud Earrings",
 		"type": "earrings",
 		"price": 699,
-		"imageUrl": "https://placehold.co/400x400/e8f4ea/1a1a1a?text=Emerald+Studs",
+		"imageUrl": "https://source.unsplash.com/400x400/?emerald,stud,earrings",
 		"colors": ["green", "gold"],
 		"styles": ["festive", "traditional", "minimal"],
 		"inStock": true
@@ -94,7 +94,7 @@
 		"name": "Pearl Bangle Set - White",
 		"type": "bangles",
 		"price": 1099,
-		"imageUrl": "https://placehold.co/400x400/f8fbff/1a1a1a?text=Pearl+Bangles",
+		"imageUrl": "https://source.unsplash.com/400x400/?pearl,bangles,white",
 		"colors": ["white", "gold"],
 		"styles": ["designer", "wedding", "party"],
 		"inStock": true
