@@ -42,6 +42,7 @@ function useFetch<T>(url: string) {
 	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
+		if (!url) return
 		setLoading(true)
 		fetch(url)
 			.then(async r => {
@@ -56,6 +57,15 @@ function useFetch<T>(url: string) {
 	return { data, loading, error }
 }
 
+function stableNumberFromString(input: string) {
+	let hash = 0
+	for (let i = 0; i < input.length; i++) {
+		hash = (hash << 5) - hash + input.charCodeAt(i)
+		hash |= 0
+	}
+	return Math.abs(hash)
+}
+
 export default function App() {
 	const { data: products, loading: productsLoading } = useFetch<Product[]>('/api/products')
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -64,6 +74,11 @@ export default function App() {
 	)
 
 	const [cart, setCart] = useState<CartItem[]>([])
+	const [wishlist, setWishlist] = useState<Record<string, boolean>>({})
+
+	const [query, setQuery] = useState('')
+	const [activeStyle, setActiveStyle] = useState<string>('all')
+	const [sort, setSort] = useState<'relevance' | 'price-asc' | 'price-desc'>('relevance')
 
 	function addToCart(item: CartItem) {
 		setCart(prev => {
@@ -81,13 +96,17 @@ export default function App() {
 		setCart(prev => prev.filter(p => p.id !== id))
 	}
 
+	function toggleWishlist(id: string) {
+		setWishlist(prev => ({ ...prev, [id]: !prev[id] }))
+	}
+
 	const cartTotal = useMemo(() => cart.reduce((sum, i) => sum + i.price * i.quantity, 0), [cart])
 
-	async function checkout() {
+	async function startCheckout(items: CartItem[]) {
 		const response = await fetch('/api/create-checkout-session', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ items: cart }),
+			body: JSON.stringify({ items }),
 		})
 		const data = await response.json()
 		if (response.ok && data?.url) {
@@ -98,7 +117,7 @@ export default function App() {
 		const mock = await fetch('/api/checkout', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ items: cart }),
+			body: JSON.stringify({ items }),
 		})
 		const mockData = await mock.json()
 		if (mock.ok) {
@@ -108,9 +127,29 @@ export default function App() {
 		}
 	}
 
+	async function checkout() {
+		await startCheckout(cart)
+	}
+
 	const urlParams = new URLSearchParams(window.location.search)
 	const isSuccess = urlParams.get('success') === 'true'
 	const isCanceled = urlParams.get('canceled') === 'true'
+
+	const allStyles = useMemo(() => Array.from(new Set((products ?? []).flatMap(p => p.styles))).sort(), [products])
+
+	const filteredSortedProducts = useMemo(() => {
+		let list = (products ?? [])
+		if (query.trim()) {
+			const q = query.trim().toLowerCase()
+			list = list.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q))
+		}
+		if (activeStyle !== 'all') {
+			list = list.filter(p => p.styles.includes(activeStyle))
+		}
+		if (sort === 'price-asc') list = [...list].sort((a, b) => a.price - b.price)
+		if (sort === 'price-desc') list = [...list].sort((a, b) => b.price - a.price)
+		return list
+	}, [products, query, activeStyle, sort])
 
 	return (
 		<div className="min-h-screen flex flex-col">
@@ -120,18 +159,25 @@ export default function App() {
 			{isCanceled && (
 				<div className="bg-rose-50 border-b border-rose-200 text-rose-800 text-sm text-center py-2">Payment canceled. Your cart is still available.</div>
 			)}
-			<header className="border-b bg-white/80 backdrop-blur">
-				<div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-					<div className="flex items-center gap-3">
-						<div className="h-10 w-10 rounded-full bg-brand-gold/20 border border-brand-gold flex items-center justify-center">
+
+			<header className="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+				<div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-4">
+					<div className="flex items-center gap-2 mr-2">
+						<div className="h-9 w-9 rounded-full bg-brand-gold/20 border border-brand-gold flex items-center justify-center">
 							<span className="font-bold text-brand-gold">G</span>
 						</div>
-						<div>
-							<p className="text-xl font-semibold tracking-wide">GMS</p>
-							<p className="text-xs text-slate-500 -mt-1">Classy • Affordable • Sarees & Sets</p>
-						</div>
+						<p className="text-lg font-semibold tracking-wide">GMS</p>
 					</div>
-					<div className="flex items-center gap-6">
+					<div className="flex-1">
+						<input
+							type="search"
+							value={query}
+							onChange={e => setQuery(e.target.value)}
+							placeholder="Search sarees (e.g., banarasi, organza, wedding)"
+							className="w-full rounded-full border px-4 py-2 text-sm"
+						/>
+					</div>
+					<div className="flex items-center gap-3">
 						<div className="text-sm text-slate-600">Cart: <span className="font-semibold">{cart.length}</span></div>
 						<button className="px-4 py-2 rounded-md bg-brand-gold text-white" onClick={checkout} disabled={cart.length === 0}>
 							Checkout {cart.length > 0 && <span>({formatCurrency(cartTotal)})</span>}
@@ -140,57 +186,111 @@ export default function App() {
 				</div>
 			</header>
 
-			<main className="mx-auto max-w-7xl px-4 py-8 flex-1 w-full">
-				<section>
-					<h2 className="text-2xl font-semibold mb-2">Discover Sarees</h2>
-					<p className="text-slate-600 mb-6">Handpicked traditional styles for every occasion. Pair with curated accessories to complete your look.</p>
+			<section className="relative">
+				<div
+					className="h-56 md:h-72 w-full bg-gradient-to-r from-rose-50 via-amber-50 to-teal-50 flex items-center"
+					style={{ backgroundImage: 'url(https://source.unsplash.com/1600x500/?saree,bridal,fashion)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+				>
+					<div className="backdrop-blur-sm bg-white/50 w-full">
+						<div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
+							<h1 className="text-2xl md:text-3xl font-bold">Classy Sarees. Honest Prices.</h1>
+							<p className="text-slate-700 mt-2 max-w-2xl">Curated Banarasi, Kanjivaram, Organza, Cotton and more. Build your outfit with matching accessories in one click.</p>
+							<div className="mt-4 flex gap-3">
+								<button onClick={() => setActiveStyle('wedding')} className="px-4 py-2 rounded-md bg-slate-900 text-white text-sm">Shop Wedding Picks</button>
+								<button onClick={() => setActiveStyle('traditional')} className="px-4 py-2 rounded-md border text-sm">Explore Classics</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
 
+			<main className="mx-auto max-w-7xl px-4 py-6 md:py-8 flex-1 w-full">
+				<div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+					<div className="flex gap-2 overflow-x-auto no-scrollbar">
+						<button onClick={() => setActiveStyle('all')} className={`px-3 py-1.5 rounded-full border text-sm ${activeStyle === 'all' ? 'bg-slate-900 text-white' : ''}`}>All</button>
+						{allStyles.map(s => (
+							<button key={s} onClick={() => setActiveStyle(s)} className={`px-3 py-1.5 rounded-full border text-sm capitalize ${activeStyle === s ? 'bg-slate-900 text-white' : ''}`}>{s}</button>
+						))}
+					</div>
+					<div className="flex items-center gap-2 text-sm">
+						<label className="text-slate-600">Sort</label>
+						<select value={sort} onChange={(e) => setSort(e.target.value as any)} className="border rounded-md px-2 py-1">
+							<option value="relevance">Relevance</option>
+							<option value="price-asc">Price: Low to High</option>
+							<option value="price-desc">Price: High to Low</option>
+						</select>
+					</div>
+				</div>
+
+				<section>
+					<h2 className="text-lg font-semibold mb-3">Discover Sarees</h2>
 					{productsLoading && <div className="text-slate-500">Loading products...</div>}
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-						{products?.map(p => (
-							<div key={p.id} className="border rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition">
-								<img src={p.imageUrl} alt={p.name} className="h-64 w-full object-cover" />
-								<div className="p-4">
-									<h3 className="font-semibold text-lg">{p.name}</h3>
-									<p className="text-slate-600 line-clamp-2 mb-3">{p.description}</p>
-									<div className="flex items-center justify-between">
-										<span className="text-brand-gold font-semibold">{formatCurrency(p.price)}</span>
-										<div className="flex gap-2">
-											<button className="px-3 py-1.5 rounded-md border" onClick={() => addToCart({ id: p.id, type: 'product', name: p.name, price: p.price, imageUrl: p.imageUrl, quantity: 1 })}>Add</button>
-											<button className="px-3 py-1.5 rounded-md bg-slate-900 text-white" onClick={() => setSelectedProduct(p)}>View</button>
+					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+						{filteredSortedProducts?.map(p => {
+							const seed = stableNumberFromString(p.id)
+							const rating = (seed % 15) / 2 + 3 // 3.0 to 10.5 -> clamp to 3.0-5.0
+							const clampedRating = Math.min(5, Math.max(3, Math.round(rating * 10) / 10))
+							const discount = (seed % 30) + 10 // 10-39%
+							const mrp = Math.round(p.price / (1 - discount / 100))
+							const fallback = `https://picsum.photos/seed/${encodeURIComponent(p.id)}/600/800`
+							return (
+								<div key={p.id} className="group border rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition flex flex-col">
+									<div className="relative">
+										<img src={p.imageUrl} alt={p.name} className="h-64 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = fallback }} />
+										<div className="absolute top-2 left-2 text-xs bg-rose-600 text-white px-2 py-1 rounded">{discount}% OFF</div>
+										<button aria-label="wishlist" onClick={() => toggleWishlist(p.id)} className="absolute top-2 right-2 bg-white/90 rounded-full p-1 shadow">
+											<span className={`inline-block w-5 h-5 ${wishlist[p.id] ? 'text-rose-600' : 'text-slate-400'}`}>❤</span>
+										</button>
+									</div>
+									<div className="p-3 flex-1 flex flex-col">
+										<h3 className="font-medium text-sm md:text-base line-clamp-2">{p.name}</h3>
+										<p className="text-xs text-slate-600 line-clamp-2 mt-1">{p.description}</p>
+										<div className="flex items-center gap-2 mt-2">
+											<span className="font-semibold text-brand-gold">{formatCurrency(p.price)}</span>
+											<span className="text-xs line-through text-slate-500">{formatCurrency(mrp)}</span>
+										</div>
+										<div className="text-xs text-amber-600 mt-1">★ {clampedRating}</div>
+										<div className="mt-3 flex items-center gap-2 mt-auto">
+											<button className="px-3 py-1.5 rounded-md border text-xs" onClick={() => addToCart({ id: p.id, type: 'product', name: p.name, price: p.price, imageUrl: p.imageUrl, quantity: 1 })}>Add to Cart</button>
+											<button className="px-3 py-1.5 rounded-md bg-slate-900 text-white text-xs" onClick={() => setSelectedProduct(p)}>View</button>
+											<button className="px-3 py-1.5 rounded-md bg-brand-gold text-white text-xs" onClick={() => startCheckout([{ id: p.id, type: 'product', name: p.name, price: p.price, imageUrl: p.imageUrl, quantity: 1 }])}>Buy Now</button>
 										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							)
+						})}
 					</div>
 				</section>
 
 				<section className="mt-10">
-					<h2 className="text-2xl font-semibold mb-3">Cart</h2>
+					<h2 className="text-lg font-semibold mb-3">Cart</h2>
 					{cart.length === 0 ? (
-						<p className="text-slate-600">Your cart is empty.</p>
+						<p className="text-slate-600 text-sm">Your cart is empty.</p>
 					) : (
 						<div className="space-y-3">
 							{cart.map(item => (
 								<div key={item.id} className="flex items-center justify-between border rounded-lg p-3">
 									<div className="flex items-center gap-3">
-										<img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover rounded" />
+										<img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover rounded"
+											onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(item.id)}/128/128` }} />
 										<div>
-											<p className="font-medium">{item.name}</p>
-											<p className="text-sm text-slate-600">{item.type} • Qty: {item.quantity}</p>
+											<p className="font-medium text-sm">{item.name}</p>
+											<p className="text-xs text-slate-600">{item.type} • Qty: {item.quantity}</p>
 										</div>
 									</div>
 									<div className="flex items-center gap-4">
 										<span className="font-semibold">{formatCurrency(item.price * item.quantity)}</span>
-										<button className="text-rose-600" onClick={() => removeFromCart(item.id)}>Remove</button>
+										<button className="text-rose-600 text-sm" onClick={() => removeFromCart(item.id)}>Remove</button>
 									</div>
 								</div>
 							))}
 							<div className="flex items-center justify-between border-t pt-3">
 								<span className="font-semibold">Total</span>
 								<span className="font-semibold">{formatCurrency(cartTotal)}</span>
+							</div>
+							<div className="text-right">
+								<button className="mt-2 px-4 py-2 rounded-md bg-brand-gold text-white" onClick={checkout}>Checkout</button>
 							</div>
 						</div>
 					)}
@@ -199,9 +299,9 @@ export default function App() {
 
 			{selectedProduct && (
 				<div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4" onClick={() => setSelectedProduct(null)}>
-					<div className="bg-white rounded-xl max-w-3xl w-full overflow-hidden" onClick={e => e.stopPropagation()}>
+					<div className="bg-white rounded-xl max-w-4xl w-full overflow-hidden" onClick={e => e.stopPropagation()}>
 						<div className="grid grid-cols-1 md:grid-cols-2">
-							<img src={selectedProduct.imageUrl} alt={selectedProduct.name} className="w-full h-80 object-cover" />
+							<img src={selectedProduct.imageUrl} alt={selectedProduct.name} className="w-full h-96 object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(selectedProduct.id)}/600/800` }} />
 							<div className="p-6">
 								<h3 className="text-xl font-semibold">{selectedProduct.name}</h3>
 								<p className="text-slate-600 mt-1">{selectedProduct.description}</p>
@@ -211,7 +311,7 @@ export default function App() {
 									<div className="grid grid-cols-2 gap-3">
 										{accessorySuggestions?.suggestions?.map(a => (
 											<div key={a.id} className="border rounded-lg overflow-hidden">
-												<img src={a.imageUrl} alt={a.name} className="h-28 w-full object-cover" />
+												<img src={a.imageUrl} alt={a.name} className="h-28 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(a.id)}/400/400` }} />
 												<div className="p-2">
 													<p className="text-sm font-medium">{a.name}</p>
 													<p className="text-xs text-slate-600">{a.type}</p>
@@ -241,7 +341,7 @@ export default function App() {
 				</div>
 			)}
 
-			<footer className="border-t py-6 text-center text-sm text-slate-600">© {new Date().getFullYear()} GMS — Classy looks at real prices.</footer>
+			<footer className="border-t py-6 text-center text-xs md:text-sm text-slate-600">© {new Date().getFullYear()} GMS — Classy looks at real prices.</footer>
 		</div>
 	)
 }
