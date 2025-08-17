@@ -84,22 +84,42 @@ export default function App() {
 	const cartTotal = useMemo(() => cart.reduce((sum, i) => sum + i.price * i.quantity, 0), [cart])
 
 	async function checkout() {
-		const response = await fetch('/api/checkout', {
+		const response = await fetch('/api/create-checkout-session', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ items: cart }),
 		})
 		const data = await response.json()
-		if (response.ok) {
-			alert(`Order placed! Order ID: ${data.orderId}`)
-			setCart([])
+		if (response.ok && data?.url) {
+			window.location.href = data.url
+			return
+		}
+		// Fallback to mock checkout
+		const mock = await fetch('/api/checkout', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ items: cart }),
+		})
+		const mockData = await mock.json()
+		if (mock.ok) {
+			window.location.href = '/?success=true'
 		} else {
-			alert(data.error || 'Checkout failed')
+			alert(mockData.error || 'Checkout failed')
 		}
 	}
 
+	const urlParams = new URLSearchParams(window.location.search)
+	const isSuccess = urlParams.get('success') === 'true'
+	const isCanceled = urlParams.get('canceled') === 'true'
+
 	return (
 		<div className="min-h-screen flex flex-col">
+			{isSuccess && (
+				<div className="bg-green-50 border-b border-green-200 text-green-800 text-sm text-center py-2">Payment successful! Thank you for your order.</div>
+			)}
+			{isCanceled && (
+				<div className="bg-rose-50 border-b border-rose-200 text-rose-800 text-sm text-center py-2">Payment canceled. Your cart is still available.</div>
+			)}
 			<header className="border-b bg-white/80 backdrop-blur">
 				<div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
 					<div className="flex items-center gap-3">

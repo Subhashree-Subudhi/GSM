@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
+import Stripe from "stripe";
 
 export interface Product {
 	id: string;
@@ -38,6 +39,9 @@ function readJsonFile<T>(relativePathFromDist: string): T {
 
 const products: Product[] = readJsonFile<Product[]>("../data/products.json");
 const accessories: Accessory[] = readJsonFile<Accessory[]>("../data/accessories.json");
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
+const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null;
 
 app.get("/api/health", (_req, res) => {
 	res.json({ ok: true, service: "GMS API", timestamp: Date.now() });
@@ -77,6 +81,55 @@ app.post("/api/checkout", (req, res) => {
 	}
 	const orderId = Math.random().toString(36).slice(2);
 	res.json({ ok: true, orderId, items });
+});
+
+app.post("/api/create-checkout-session", async (req, res) => {
+	try {
+		const { items } = req.body ?? {} as { items: Array<{ id: string; name: string; price: number; quantity: number; imageUrl?: string; type?: string }>; };
+		if (!Array.isArray(items) || items.length === 0) {
+			return res.status(400).json({ error: "No items to checkout" });
+		}
+
+		const proto = (req.headers["x-forwarded-proto"] as string)?.split(",")[0] || req.protocol;
+		const host = (req.headers["x-forwarded-host"] as string)?.split(",")[0] || req.get("host");
+		const origin = `${proto}://${host}`;
+
+		if (!stripe) {
+			// Fallback: mock checkout when Stripe is not configured
+			return res.status(200).json({
+				mock: true,
+				message: "Stripe not configured. Proceeding with mock checkout.",
+				url: `${origin}/?success=true`,
+			});
+		}
+
+		const line_items = items.map((it) => ({
+			quantity: Math.max(1, Number(it.quantity || 1)),
+			price_data: {
+				currency: "inr",
+				unit_amount: Math.round(Number(it.price) * 100),
+				product_data: {
+					name: it.name,
+					images: it.imageUrl ? [it.imageUrl] : [],
+					metadata: { id: it.id, type: it.type || "unknown" }
+				}
+			}
+		}));
+
+		const session = await stripe.checkout.sessions.create({
+			mode: "payment",
+			payment_method_types: ["card"],
+			line_items,
+			success_url: `${origin}/?success=true`,
+			cancel_url: `${origin}/?canceled=true`,
+			shipping_address_collection: { allowed_countries: ["IN"] },
+		});
+
+		return res.json({ url: session.url });
+	} catch (err: any) {
+		console.error("Checkout session error", err);
+		return res.status(500).json({ error: "Failed to create checkout session" });
+	}
 });
 
 // Serve built client if present (mount at root, exclude /api/*)
