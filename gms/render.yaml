@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: gms
+    env: docker
+    plan: free
+    autoDeploy: true
+    region: oregon
+    healthCheckPath: /api/health
