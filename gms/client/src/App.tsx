@@ -136,11 +136,8 @@ export default function App() {
 	const cartTotal = useMemo(() => cart.reduce((sum, i) => sum + i.price * i.quantity, 0), [cart])
 
 	async function startCheckout(items: CartItem[]) {
-		// Try Razorpay first
 		try {
-			const rpRes = await fetch('/api/razorpay/order', {
-				method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items })
-			})
+			const rpRes = await fetch('/api/razorpay/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) })
 			const rp = await rpRes.json()
 			if (rpRes.ok && rp?.order?.id && rp?.keyId) {
 				const ok = await loadRazorpayScript()
@@ -164,25 +161,13 @@ export default function App() {
 			}
 		} catch {}
 
-		// Fallback to Stripe
-		const response = await fetch('/api/create-checkout-session', {
-			method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items })
-		})
+		const response = await fetch('/api/create-checkout-session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) })
 		const data = await response.json()
-		if (response.ok && data?.url) {
-			window.location.href = data.url
-			return
-		}
-		// Fallback to mock checkout
-		const mock = await fetch('/api/checkout', {
-			method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items })
-		})
+		if (response.ok && data?.url) { window.location.href = data.url; return }
+
+		const mock = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) })
 		const mockData = await mock.json()
-		if (mock.ok) {
-			window.location.href = '/?success=true'
-		} else {
-			alert(mockData.error || 'Checkout failed')
-		}
+		if (mock.ok) { window.location.href = '/?success=true' } else { alert(mockData.error || 'Checkout failed') }
 	}
 
 	async function checkout() { await startCheckout(cart) }
@@ -316,22 +301,25 @@ export default function App() {
 	)
 }
 
-function HomePage({ productsLoading, allStyles, activeStyle, setActiveStyle, sort, setSort, filteredSortedProducts, addToCart, setSelectedProduct, startCheckout, cart, cartTotal, removeFromCart, checkout }:{
-	productsLoading: boolean;
-	allStyles: string[];
-	activeStyle: string;
-	setActiveStyle: (s: string)=>void;
-	sort: 'relevance' | 'price-asc' | 'price-desc';
-	setSort: (s: any)=>void;
-	filteredSortedProducts: Product[];
-	addToCart: (i: CartItem)=>void;
-	setSelectedProduct: (p: Product)=>void;
-	startCheckout: (items: CartItem[])=>void;
-	cart: CartItem[];
-	cartTotal: number;
-	removeFromCart: (id: string)=>void;
-	checkout: ()=>void;
-}) {
+type HomePageProps = {
+	productsLoading: boolean
+	allStyles: string[]
+	activeStyle: string
+	setActiveStyle: (s: string)=>void
+	sort: 'relevance' | 'price-asc' | 'price-desc'
+	setSort: (s: any)=>void
+	filteredSortedProducts: Product[]
+	addToCart: (i: CartItem)=>void
+	setSelectedProduct: (p: Product)=>void
+	startCheckout: (items: CartItem[])=>void
+	cart: CartItem[]
+	cartTotal: number
+	removeFromCart: (id: string)=>void
+	checkout: ()=>void
+}
+
+function HomePage(props: HomePageProps) {
+	const { productsLoading, allStyles, activeStyle, setActiveStyle, sort, setSort, filteredSortedProducts, addToCart, setSelectedProduct, startCheckout, cart, cartTotal, removeFromCart, checkout } = props
 	return (
 		<main className="mx-auto max-w-7xl px-4 py-6 md:py-8 flex-1 w-full">
 			<div className="flex items-center justify-between flex-wrap gap-3 mb-4">
@@ -368,7 +356,6 @@ function HomePage({ productsLoading, allStyles, activeStyle, setActiveStyle, sor
 								<div className="relative">
 									<img src={withCdn(p.imageUrl, p.id)} alt={p.name} className="h-64 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = fallback }} />
 									<div className="absolute top-2 left-2 text-xs bg-rose-600 text-white px-2 py-1 rounded">{discount}% OFF</div>
-									<button aria-label="wishlist" onClick={() => {/* wishlist handled at App level via modal */}} className="hidden" />
 								</div>
 								<div className="p-3 flex-1 flex flex-col">
 									<h3 className="font-medium text-sm md:text-base line-clamp-2">{p.name}</h3>
@@ -425,7 +412,17 @@ function HomePage({ productsLoading, allStyles, activeStyle, setActiveStyle, sor
 	)
 }
 
-function CategoryPage({ products, setSelectedProduct, addToCart, startCheckout, wishlist, toggleWishlist }:{ products: Product[]; setSelectedProduct: (p: Product)=>void; addToCart: (i: CartItem)=>void; startCheckout: (items: CartItem[])=>void; wishlist: Record<string, boolean>; toggleWishlist:(id:string)=>void }) {
+type CategoryPageProps = {
+	products: Product[]
+	setSelectedProduct: (p: Product)=>void
+	addToCart: (i: CartItem)=>void
+	startCheckout: (items: CartItem[])=>void
+	wishlist: Record<string, boolean>
+	toggleWishlist: (id: string)=>void
+}
+
+function CategoryPage(props: CategoryPageProps) {
+	const { products, setSelectedProduct, addToCart, startCheckout, wishlist, toggleWishlist } = props
 	const { style } = useParams()
 	const filtered = products.filter(p => p.styles.includes(style || ''))
 	return (
