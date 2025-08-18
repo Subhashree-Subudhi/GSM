@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const stripe_1 = __importDefault(require("stripe"));
+const razorpay_1 = __importDefault(require("razorpay"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -20,6 +21,9 @@ const products = readJsonFile("../data/products.json");
 const accessories = readJsonFile("../data/accessories.json");
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
 const stripe = stripeSecretKey ? new stripe_1.default(stripeSecretKey) : null;
+const razorpayKeyId = process.env.RAZORPAY_KEY_ID || "";
+const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || "";
+const razorpay = razorpayKeyId && razorpayKeySecret ? new razorpay_1.default({ key_id: razorpayKeyId, key_secret: razorpayKeySecret }) : null;
 app.get("/api/health", (_req, res) => {
     res.json({ ok: true, service: "GMS API", timestamp: Date.now() });
 });
@@ -97,6 +101,24 @@ app.post("/api/create-checkout-session", async (req, res) => {
     catch (err) {
         console.error("Checkout session error", err);
         return res.status(500).json({ error: "Failed to create checkout session" });
+    }
+});
+app.post("/api/razorpay/order", async (req, res) => {
+    try {
+        const { items } = req.body ?? {};
+        if (!Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ error: "No items to checkout" });
+        }
+        if (!razorpay) {
+            return res.status(200).json({ mock: true, message: "Razorpay not configured" });
+        }
+        const amountInPaise = Math.round(items.reduce((sum, i) => sum + Number(i.price) * Math.max(1, Number(i.quantity || 1)), 0) * 100);
+        const order = await razorpay.orders.create({ amount: amountInPaise, currency: "INR", receipt: `gms_${Date.now()}` });
+        return res.json({ order, keyId: razorpayKeyId });
+    }
+    catch (err) {
+        console.error("Razorpay order error", err);
+        return res.status(500).json({ error: "Failed to create Razorpay order" });
     }
 });
 // Serve built client if present (mount at root, exclude /api/*)
