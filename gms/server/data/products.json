@@ -1,0 +1,134 @@
+[
+	{
+		"id": "saree-royal-banarasi-gold",
+		"name": "Royal Banarasi Silk Saree - Gold Zari",
+		"description": "Luxurious Banarasi silk saree with intricate gold zari work. Perfect for weddings and grand festivities.",
+		"price": 7999,
+		"imageUrl": "https://source.unsplash.com/600x800/?banarasi,saree,bridal",
+		"category": "Saree",
+		"colors": ["red", "maroon", "gold"],
+		"styles": ["traditional", "festive", "wedding"],
+		"inStock": true
+	},
+	{
+		"id": "saree-katan-emerald",
+		"name": "Katan Silk Saree - Emerald Green",
+		"description": "Elegant katan silk with subtle sheen and contrast border, ideal for receptions and pujas.",
+		"price": 5499,
+		"imageUrl": "https://source.unsplash.com/600x800/?katan,silk,saree,emerald",
+		"category": "Saree",
+		"colors": ["green", "gold"],
+		"styles": ["traditional", "festive"],
+		"inStock": true
+	},
+	{
+		"id": "saree-kalamkari-indigo",
+		"name": "Handblock Kalamkari Saree - Indigo",
+		"description": "Artisanal kalamkari print on soft cotton. Breathable and stunning for day events.",
+		"price": 3299,
+		"imageUrl": "https://source.unsplash.com/600x800/?kalamkari,blockprint,saree,indigo",
+		"category": "Saree",
+		"colors": ["indigo", "cream"],
+		"styles": ["handloom", "casual", "ethnic"],
+		"inStock": true
+	},
+	{
+		"id": "saree-chiffon-rose",
+		"name": "Lightweight Chiffon Saree - Rose Blush",
+		"description": "Flowy chiffon saree with satin border. Minimal yet classy for evening dinners.",
+		"price": 2599,
+		"imageUrl": "https://source.unsplash.com/600x800/?chiffon,saree,rose",
+		"category": "Saree",
+		"colors": ["pink", "rose", "silver"],
+		"styles": ["party", "minimal", "designer"],
+		"inStock": true
+	},
+	{
+		"id": "saree-tussar-sand",
+		"name": "Pure Tussar Silk Saree - Sand Beige",
+		"description": "Understated charm with natural tussar texture and delicate zari pallu.",
+		"price": 6199,
+		"imageUrl": "https://source.unsplash.com/600x800/?tussar,silk,saree,beige",
+		"category": "Saree",
+		"colors": ["beige", "gold"],
+		"styles": ["traditional", "office", "minimal"],
+		"inStock": true
+	},
+	{
+		"id": "saree-linen-mint",
+		"name": "Linen Saree - Mint Breeze",
+		"description": "Cool and breathable linen saree with contrast tassels. Everyday elegance.",
+		"price": 2899,
+		"imageUrl": "https://source.unsplash.com/600x800/?linen,saree,mint",
+		"category": "Saree",
+		"colors": ["mint", "white"],
+		"styles": ["casual", "office", "handloom"],
+		"inStock": true
+	},
+	{
+		"id": "saree-georgette-noir",
+		"name": "Georgette Saree - Noir Sequins",
+		"description": "Black georgette saree with delicate sequin scatter. Chic and timeless.",
+		"price": 3999,
+		"imageUrl": "https://source.unsplash.com/600x800/?georgette,saree,black",
+		"category": "Saree",
+		"colors": ["black", "silver"],
+		"styles": ["party", "designer"],
+		"inStock": true
+	},
+	{
+		"id": "saree-kanjivaram-ruby",
+		"name": "Kanjivaram Silk Saree - Ruby Red",
+		"description": "Traditional kanjivaram weave with rich temple border. Heritage luxury.",
+		"price": 9999,
+		"imageUrl": "https://source.unsplash.com/600x800/?kanjivaram,silk,saree,red",
+		"category": "Saree",
+		"colors": ["red", "gold"],
+		"styles": ["wedding", "traditional", "festive"],
+		"inStock": true
+	},
+	{
+		"id": "saree-cotton-ivory",
+		"name": "Handloom Cotton Saree - Ivory Checks",
+		"description": "Soft cotton with subtle checks and contrast border. Everyday classic.",
+		"price": 1999,
+		"imageUrl": "https://source.unsplash.com/600x800/?cotton,saree,ivory",
+		"category": "Saree",
+		"colors": ["ivory", "black"],
+		"styles": ["handloom", "office", "casual"],
+		"inStock": true
+	},
+	{
+		"id": "saree-organza-pearl",
+		"name": "Organza Saree - Pearl White",
+		"description": "Ethereal organza with pearl beaded border for a delicate, classy look.",
+		"price": 4499,
+		"imageUrl": "https://source.unsplash.com/600x800/?organza,saree,white",
+		"category": "Saree",
+		"colors": ["white", "silver"],
+		"styles": ["designer", "party", "minimal"],
+		"inStock": true
+	},
+	{
+		"id": "saree-banarasi-teal",
+		"name": "Banarasi Silk Saree - Teal Charm",
+		"description": "Contemporary teal base with traditional motifs for a modern-heritage blend.",
+		"price": 7199,
+		"imageUrl": "https://source.unsplash.com/600x800/?banarasi,silk,saree,teal",
+		"category": "Saree",
+		"colors": ["teal", "gold"],
+		"styles": ["festive", "traditional"],
+		"inStock": true
+	},
+	{
+		"id": "saree-silk-pastel",
+		"name": "Soft Silk Saree - Pastel Harmony",
+		"description": "Soft silk drape with pastel palette and woven border. Elegant and affordable.",
+		"price": 3799,
+		"imageUrl": "https://source.unsplash.com/600x800/?soft,silk,saree,pastel",
+		"category": "Saree",
+		"colors": ["lavender", "peach", "mint"],
+		"styles": ["festive", "minimal", "designer"],
+		"inStock": true
+	}
+]

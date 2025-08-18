@@ -1,0 +1,102 @@
+[
+	{
+		"id": "acc-necklace-kundan-gold",
+		"name": "Kundan Necklace Set - Antique Gold",
+		"type": "necklace",
+		"price": 2599,
+		"imageUrl": "https://source.unsplash.com/400x400/?kundan,necklace,indian",
+		"colors": ["gold", "maroon", "green"],
+		"styles": ["traditional", "festive", "wedding"],
+		"inStock": true
+	},
+	{
+		"id": "acc-earing-jhumka-pearl",
+		"name": "Pearl Jhumka Earrings",
+		"type": "earrings",
+		"price": 899,
+		"imageUrl": "https://source.unsplash.com/400x400/?jhumka,earrings,pearl",
+		"colors": ["white", "gold"],
+		"styles": ["traditional", "designer", "minimal"],
+		"inStock": true
+	},
+	{
+		"id": "acc-bangle-meenakari-red",
+		"name": "Meenakari Bangle Set - Ruby Red",
+		"type": "bangles",
+		"price": 1199,
+		"imageUrl": "https://source.unsplash.com/400x400/?meenakari,bangles,red",
+		"colors": ["red", "gold"],
+		"styles": ["traditional", "festive"],
+		"inStock": true
+	},
+	{
+		"id": "acc-bracelet-minimal-silver",
+		"name": "Minimal Bracelet - Silver Tone",
+		"type": "bracelet",
+		"price": 499,
+		"imageUrl": "https://source.unsplash.com/400x400/?bracelet,silver,minimal",
+		"colors": ["silver"],
+		"styles": ["minimal", "designer", "party"],
+		"inStock": true
+	},
+	{
+		"id": "acc-heels-stiletto-black",
+		"name": "Stiletto Heels - Noir",
+		"type": "heels",
+		"price": 1799,
+		"imageUrl": "https://source.unsplash.com/400x400/?stiletto,heels,black",
+		"colors": ["black", "silver"],
+		"styles": ["party", "designer"],
+		"inStock": true
+	},
+	{
+		"id": "acc-sandals-ethnic-tan",
+		"name": "Ethnic Sandals - Tan",
+		"type": "sandals",
+		"price": 999,
+		"imageUrl": "https://source.unsplash.com/400x400/?kolhapuri,sandals,tan",
+		"colors": ["beige", "tan", "gold"],
+		"styles": ["traditional", "casual"],
+		"inStock": true
+	},
+	{
+		"id": "acc-clutch-embellished-gold",
+		"name": "Embellished Clutch - Gold",
+		"type": "clutch",
+		"price": 1399,
+		"imageUrl": "https://source.unsplash.com/400x400/?clutch,bag,gold",
+		"colors": ["gold", "beige"],
+		"styles": ["festive", "wedding", "party"],
+		"inStock": true
+	},
+	{
+		"id": "acc-necklace-oxidized-silver",
+		"name": "Oxidized Silver Necklace",
+		"type": "necklace",
+		"price": 1299,
+		"imageUrl": "https://source.unsplash.com/400x400/?oxidized,silver,necklace",
+		"colors": ["silver", "black"],
+		"styles": ["handloom", "casual", "designer"],
+		"inStock": true
+	},
+	{
+		"id": "acc-earing-stud-emerald",
+		"name": "Emerald Stud Earrings",
+		"type": "earrings",
+		"price": 699,
+		"imageUrl": "https://source.unsplash.com/400x400/?emerald,stud,earrings",
+		"colors": ["green", "gold"],
+		"styles": ["festive", "traditional", "minimal"],
+		"inStock": true
+	},
+	{
+		"id": "acc-bangle-pearl-white",
+		"name": "Pearl Bangle Set - White",
+		"type": "bangles",
+		"price": 1099,
+		"imageUrl": "https://source.unsplash.com/400x400/?pearl,bangles,white",
+		"colors": ["white", "gold"],
+		"styles": ["designer", "wedding", "party"],
+		"inStock": true
+	}
+]
