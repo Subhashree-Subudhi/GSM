@@ -281,6 +281,8 @@ export default function App() {
 										))}
 									</div>
 
+								</div>
+
 								<div className="mt-6 flex items-center gap-3">
 									<button className="px-4 py-2 rounded-md border" onClick={() => addToCart({ id: selectedProduct.id, type: 'product', name: selectedProduct.name, price: selectedProduct.price, imageUrl: selectedProduct.imageUrl, quantity: 1 })}>Add Saree</button>
 									<button className="px-4 py-2 rounded-md bg-brand-gold text-white" onClick={() => {
@@ -352,9 +354,9 @@ function HomePage(props: HomePageProps) {
 						const mrp = Math.round(p.price / (1 - discount / 100))
 						const fallback = `https://picsum.photos/seed/${encodeURIComponent(p.id)}/600/800`
 						return (
-							<div key={p.id} className="group border rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition flex flex-col">
+							<div key={p.id} className="group border rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-lg transition-transform duration-200 hover:-translate-y-0.5 hover:scale-[1.01] flex flex-col">
 								<div className="relative">
-									<img src={withCdn(p.imageUrl, p.id)} alt={p.name} className="h-64 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = fallback }} />
+									<img src={withCdn(p.imageUrl, p.id)} alt={p.name} className="h-64 md:h-72 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = fallback }} />
 									<div className="absolute top-2 left-2 text-xs bg-rose-600 text-white px-2 py-1 rounded">{discount}% OFF</div>
 								</div>
 								<div className="p-3 flex-1 flex flex-col">
@@ -430,9 +432,9 @@ function CategoryPage(props: CategoryPageProps) {
 			<h2 className="text-lg font-semibold mb-3 capitalize">{style} Sarees</h2>
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
 				{filtered.map(p => (
-					<div key={p.id} className="group border rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition flex flex-col">
+					<div key={p.id} className="group border rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-lg transition-transform duration-200 hover:-translate-y-0.5 hover:scale-[1.01] flex flex-col">
 						<div className="relative">
-							<img src={withCdn(p.imageUrl, p.id)} alt={p.name} className="h-64 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(p.id)}/600/800` }} />
+							<img src={withCdn(p.imageUrl, p.id)} alt={p.name} className="h-64 md:h-72 w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/${encodeURIComponent(p.id)}/600/800` }} />
 							<button aria-label="wishlist" onClick={() => toggleWishlist(p.id)} className="absolute top-2 right-2 bg-white/90 rounded-full p-1 shadow">
 								<span className={`inline-block w-5 h-5 ${wishlist[p.id] ? 'text-rose-600' : 'text-slate-400'}`}>❤</span>
 							</button>
